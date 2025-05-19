@@ -1,0 +1,35 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  imageName: mi-app-python
+  registry: proyectoredesslfj.azurecr.io
+
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+    displayName: 'Seleccionar Python 3.x'
+
+  - script: |
+      python -m pip install --upgrade pip
+      pip install -r src/requirements.txt
+    displayName: 'Instalar dependencias (local)'
+
+  - task: Docker@2
+    displayName: 'Build & Push Docker image to ACR'
+    inputs:
+      # Indica el Service Connection que configuraste en Azure DevOps
+      containerRegistry: 'dockerRegistryServiceConnection'
+      # Nombre completo del repositorio dentro de tu ACR
+      repository: '$(registry)/$(imageName)'
+      command: buildAndPush
+      dockerfile: 'Dockerfile'
+      tags: |
+        latest
+        $(Build.BuildId)
