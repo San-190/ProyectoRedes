@@ -1,13 +1,15 @@
 FROM python:3.9-slim
 WORKDIR /app
 
-# Copiamos requirements al mismo directorio de trabajo
+# Copia el archivo requirements.txt desde el directorio src del proyecto
+# local al directorio de trabajo (/app) dentro del contenedor.
 COPY src/requirements.txt ./
 
 # Instalamos dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiamos el resto de la aplicación
+# Copia todos los archivos y carpetas desde el directorio src del proyecto
+# local al directorio de trabajo (/app) dentro del contenedor.
 COPY src/ .
 
 # Expone el puerto en el que corre la aplicación

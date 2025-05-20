@@ -3,11 +3,16 @@ trigger:
     include:
       - main
 
+# Define el pool de agentes que se usará para ejecutar el pipeline.
+# En este caso, se utiliza una máquina virtual con Ubuntu.
 pool:
   vmImage: ubuntu-latest
 
+# Define variables que se pueden usar en todo el pipeline.
 variables:
+  # Nombre de la imagen Docker que se generará.
   imageName: mi-app-python
+  # Dirección del registro de contenedores en Azure Container Registry (ACR).
   registry: proyectoredesslfj.azurecr.io
 
 steps:
@@ -24,12 +29,15 @@ steps:
   - task: Docker@2
     displayName: 'Build & Push Docker image to ACR'
     inputs:
-      # Indica el Service Connection que configuraste en Azure DevOps
+      # Especifica la conexión al registro de contenedores configurada en Azure DevOps.
       containerRegistry: 'dockerRegistryServiceConnection'
-      # Nombre completo del repositorio dentro de tu ACR
+      # Define el repositorio completo dentro del ACR (registro/nombre de la imagen).
       repository: '$(registry)/$(imageName)'
+      # Indica que se ejecutará el comando para construir y subir la imagen.
       command: buildAndPush
+      # Especifica la ubicación del archivo `Dockerfile` que se usará para construir la imagen.
       dockerfile: 'Dockerfile'
+      # Define las etiquetas que se asignarán a la imagen Docker.
       tags: |
         latest
         $(Build.BuildId)
