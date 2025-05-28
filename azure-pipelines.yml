@@ -46,7 +46,7 @@ steps:
     displayName: 'Actualizar deployment en Kubernetes'
     inputs:
       connectionType: 'Azure Resource Manager'
-      azureSubscription: 'ConexiónAKSRedes'
+      azureSubscriptionEndpoint: 'ConexiónAKSRedes'
       azureResourceGroup: 'ProyectoRedes'
       kubernetesCluster: 'Redes-Proyecto'
       namespace: 'default'
