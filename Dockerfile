@@ -16,4 +16,4 @@ COPY src/ .
 EXPOSE 5000
 
 # Comando para ejecutar la aplicación
-CMD ["python", "src/app.py"]
+CMD ["python", "app.py"]
