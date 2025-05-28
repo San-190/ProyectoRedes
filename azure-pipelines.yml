@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-      - main
+      - master
 
 # Define el pool de agentes que se usará para ejecutar el pipeline.
 # En este caso, se utiliza una máquina virtual con Ubuntu.
