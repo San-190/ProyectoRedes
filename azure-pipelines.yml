@@ -41,3 +41,15 @@ steps:
       tags: |
         latest
         $(Build.BuildId)
+
+  - task: Kubernetes@1
+    displayName: 'Actualizar deployment en Kubernetes'
+    inputs:
+      connectionType: 'Azure Resource Manager'
+      azureSubscription: 'ConexiónAKSRedes'
+      azureResourceGroup: 'ProyectoRedes'
+      kubernetesCluster: 'Redes-Proyecto'
+      namespace: 'default'
+      command: 'apply'
+      useConfigurationFile: true
+      configuration: 'deployment.yaml'
