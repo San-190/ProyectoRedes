@@ -42,6 +42,14 @@ steps:
         latest
         $(Build.BuildId)
 
+  - task: Bash@3
+    displayName: 'Actualizar deployment.yaml con tag del build'
+    inputs:
+      targetType: 'inline'
+      script: |
+        sed -i "s|image: proyectoredesslfj.azurecr.io/proyectoredesslfj.azurecr.io/mi-app-python:.*|image: proyectoredesslfj.azurecr.io/proyectoredesslfj.azurecr.io/mi-app-python:$(Build.BuildId)|" k8s/deployment.yaml
+
+
   - task: Kubernetes@1
     displayName: 'Actualizar deployment en Kubernetes'
     inputs:
