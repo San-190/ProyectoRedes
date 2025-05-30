@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi-app-python
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mi-app-python
+  template:
+    metadata:
+      labels:
+        app: mi-app-python
+    spec:
+      containers:
+        - name: contenedor-python
+          image: proyectoredesslfj.azurecr.io/proyectoredesslfj.azurecr.io/mi-app-python:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+      imagePullSecrets:
+        - name: acr-secret
