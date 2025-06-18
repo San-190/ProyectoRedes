@@ -51,6 +51,14 @@ steps:
         latest
         $(Build.BuildId)
 
+  - task: Bash@3 # Tarea que ejecuta un script Bash en el pipeline
+    displayName: 'Actualizar deployment.yaml con tag del build'
+    inputs:
+      targetType: 'inline' # Indica que el script se define directamente en el YAML
+      # Actualiza la línea de la imagen en deployment.yaml para usar el tag del build actua
+      script: |
+        sed -i "s|image: proyectoredesslfj.azurecr.io/proyectoredesslfj.azurecr.io/mi-app-python:.*|image: proyectoredesslfj.azurecr.io/proyectoredesslfj.azurecr.io/mi-app-python:$(Build.BuildId)|" k8s/deployment.yaml
+
   - task: Kubernetes@1  # Tarea de Kubernetes para interactuar con el clúster
     displayName: 'Actualizar deployment en Kubernetes'  # Nombre descriptivo de la tarea en el pipeline
     inputs:
