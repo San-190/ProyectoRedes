@@ -52,6 +52,7 @@ steps:
         $(Build.BuildId)
 
   # Actualiza el archivo deployment.yaml para que la imagen Docker referenciada use el tag del build actual
+  # Esta tarea usa `sed` para reemplazar la imagen en el archivo de configuración de Kubernetes.
   - task: Bash@3
     displayName: 'Actualizar deployment.yaml con tag del build'
     inputs:
