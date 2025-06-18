@@ -1,10 +1,13 @@
+# Configura el disparador del pipeline para ejecutarse automáticamente
 trigger:
+  # Especifica las ramas que activarán el pipeline
   branches:
     include:
-      - master
+      - master  # Solo la rama 'master' activa el pipeline
+  # Especifica los paths que activarán el pipeline
   paths:
     include:
-      - '*'
+      - '*'  # Cualquier cambio en cualquier archivo activa el pipeline
 
 # Define el pool de agentes que se usará para ejecutar el pipeline.
 # En este caso, se utiliza una máquina virtual con Ubuntu.
@@ -19,16 +22,19 @@ variables:
   registry: proyectoredesslfj.azurecr.io
 
 steps:
+  # Selecciona la versión de Python a usar en el agente
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.x'
+      versionSpec: '3.x'  # Especifica que se usará cualquier versión 3.x de Python
     displayName: 'Seleccionar Python 3.x'
 
+  # Instala y actualiza pip, luego instala las dependencias del proyecto localmente
   - script: |
       python -m pip install --upgrade pip
       pip install -r src/requirements.txt
     displayName: 'Instalar dependencias (local)'
 
+  # Construye y sube la imagen Docker al Azure Container Registry (ACR)
   - task: Docker@2
     displayName: 'Build & Push Docker image to ACR'
     inputs:
@@ -52,14 +58,14 @@ steps:
       script: |
         sed -i "s|image: proyectoredesslfj.azurecr.io/proyectoredesslfj.azurecr.io/mi-app-python:.*|image: proyectoredesslfj.azurecr.io/proyectoredesslfj.azurecr.io/mi-app-python:$(Build.BuildId)|" k8s/deployment.yaml
 
-  - task: Kubernetes@1
-    displayName: 'Actualizar deployment en Kubernetes'
+  - task: Kubernetes@1  # Tarea de Kubernetes para interactuar con el clúster
+    displayName: 'Actualizar deployment en Kubernetes'  # Nombre descriptivo de la tarea en el pipeline
     inputs:
-      connectionType: 'Azure Resource Manager'
-      azureSubscriptionEndpoint: 'ConexiónAKSRedes'
-      azureResourceGroup: 'ProyectoRedes'
-      kubernetesCluster: 'redes-proyecto'
-      namespace: 'default'
-      command: 'apply'
-      useConfigurationFile: true
-      configuration: 'k8s/deployment.yaml'
+      connectionType: 'Azure Resource Manager'  # Tipo de conexión, en este caso Azure Resource Manager
+      azureSubscriptionEndpoint: 'ConexiónAKSRedes'  # Nombre de la conexión al recurso de suscripción de Azure
+      azureResourceGroup: 'ProyectoRedes'  # Grupo de recursos de Azure donde está el clúster
+      kubernetesCluster: 'redes-proyecto'  # Nombre del clúster de Kubernetes
+      namespace: 'default'  # Namespace de Kubernetes donde se aplicará el deployment
+      command: 'apply'  # Comando a ejecutar, en este caso aplicar la configuración
+      useConfigurationFile: true  # Indica que se usará un archivo de configuración
+      configuration: 'k8s/deployment.yaml'  # Ruta al archivo de configuración de Kubernetes
