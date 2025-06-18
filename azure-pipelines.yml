@@ -51,6 +51,7 @@ steps:
         latest
         $(Build.BuildId)
 
+  # Actualiza el archivo deployment.yaml para que la imagen Docker referenciada use el tag del build actual
   - task: Bash@3
     displayName: 'Actualizar deployment.yaml con tag del build'
     inputs:
